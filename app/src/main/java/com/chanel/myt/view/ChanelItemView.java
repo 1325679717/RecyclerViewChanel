@@ -13,6 +13,7 @@ import com.chanel.myt.utils.DisPlayUtils;
 public class ChanelItemView extends LinearLayout {
     private int opendHeight = 0;
 
+    private int opendWidth = 0;
     private int foldedHeight = 0;
 
     private float parallax = 0;
@@ -54,6 +55,7 @@ public class ChanelItemView extends LinearLayout {
 
         foldedHeight = (int)context.getResources().getDimension(R.dimen.closed_bloc_height);
         opendHeight = (int) (DisPlayUtils.getScreenHeight(context) *0.6);
+        opendWidth = DisPlayUtils.getScreenWidth(context);
     }
 
     @Override
@@ -62,19 +64,34 @@ public class ChanelItemView extends LinearLayout {
         imageView = findViewById(R.id.iv);
     }
 
-    public void parallax(float f){
+    public void parallaxOpen(float f){
         parallax = f;
-        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) getLayoutParams();
-        layoutParams.height = (int) (opendHeight * f);
-//        setLayoutParams(layoutParams);
-//        imageView.setY(opendHeight * f);
+        imageView.getLayoutParams().height = (int) (opendHeight *f);
+        imageView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
+    public void parallaxFolded(float f){//0-1
+        parallax = f;
 
+        imageView.getLayoutParams().height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
+        imageView.getLayoutParams().width = opendWidth;
+        requestLayout();
+    }
+    public void parallax(float f){
+        parallax = f;
+        imageView.getLayoutParams().height = foldedHeight;
+        imageView.getLayoutParams().width = opendWidth;
+        requestLayout();
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
+        imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
+//        int imgHeight =
 //        setMeasuredDimension();
+    }
+
+    public ImageView getImageView() {
+        return imageView;
     }
 }

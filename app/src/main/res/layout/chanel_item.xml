@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/iv"
-        android:scaleType="center"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </com.chanel.myt.view.ChanelItemView>

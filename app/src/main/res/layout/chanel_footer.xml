@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/iv"
+        android:scaleType="fitXY"
+        android:layout_width="200dp"
+        android:background="@color/def_pointer_color"
+        android:layout_height="115dp" />
+</LinearLayout>
