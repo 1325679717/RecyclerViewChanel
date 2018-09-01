@@ -40,8 +40,12 @@ public class MyAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-            myViewHolder.imageView.setTag(viewHolder.getLayoutPosition());
-            myViewHolder.imageView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
+            TextView textView = myViewHolder.textView;
+            textView.setTag(viewHolder.getLayoutPosition());
+            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
+            textView.setText(viewHolder.getLayoutPosition()+"");
+            myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
+
         }else {
             FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
             TextView textView = footerViewHolder.textView;
@@ -66,10 +70,10 @@ public class MyAdapter extends RecyclerView.Adapter {
         return list.size();
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
-        ImageView imageView;
+        TextView textView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.iv);
+            textView = itemView.findViewById(R.id.iv);
         }
     }
     class FooterViewHolder extends RecyclerView.ViewHolder{

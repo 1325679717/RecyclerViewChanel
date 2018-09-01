@@ -9,10 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
-public class ChanelView extends RecyclerView {
-    LinearLayoutManager linearLayoutManager;
+import com.chanel.myt.R;
+import com.chanel.myt.utils.ScrollDirectionDetector;
+
+public class ChanelView extends RecyclerView implements ScrollDirectionDetector.OnDetectScrollListener {
+    private ScrollDirectionDetector scrollDirectionDetector;
     private float velocityFactor = 0.25f;
+    private ScrollDirectionDetector.ScrollDirection mOldScrollDirection = null;
     private Rect mCurrentViewRect = new Rect();
     public ChanelView(@NonNull Context context) {
         super(context);
@@ -32,6 +37,13 @@ public class ChanelView extends RecyclerView {
     @Override
     public boolean fling(int velocityX, int velocityY) {
         return super.fling((int) (velocityX *velocityFactor), (int) (velocityY *velocityFactor));
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+//        scrollDirectionDetector = new ScrollDirectionDetector(this);
+//        scrollDirectionDetector.onDetectedListScroll(getLayoutManager(),0);
     }
 
     private void onCreate(){
@@ -57,15 +69,16 @@ public class ChanelView extends RecyclerView {
             View childView = linearLayoutManager.getChildAt(i);
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) linearLayoutManager.getChildAt(i);
-            if(chanelItemView.getBottom() <= chanelItemView.getOpendHeight() || chanelItemView.getTop() < 0){//展开的
+            float f = (1 - ((float)chanelItemView.getTop())/chanelItemView.getOpendHeight());
+            if(f >=1){//展开的
                 chanelItemView.setParallaxOffset(1);
                 chanelItemView.parallaxOpen(1.0f);
-            }else if (chanelItemView.getTop() < chanelItemView.getOpendHeight()){//正在展开的
+            }else if (f >= 0 && f < 1){//正在展开的
                 chanelItemView.setParallaxOffset(0);
-                chanelItemView.parallaxFolded(1 - ((float)chanelItemView.getTop())/chanelItemView.getOpendHeight());
+                chanelItemView.parallaxOpening(f);
             }else {//折叠的
                 chanelItemView.setParallaxOffset(0);
-                chanelItemView.parallax(0.2f);
+                chanelItemView.parallaxFolded(0.2f);
             }
         }
     }
@@ -73,23 +86,25 @@ public class ChanelView extends RecyclerView {
     @Override
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
-        Log.i("ChanelView","onScrollStateChanged state = "+state);
+        Log.i("ChanelView","onScrollStateChanged state = "+state+",mOldScrollDirection = "+mOldScrollDirection);
         if (state == SCROLL_STATE_DRAGGING){
 
         }else if (state == SCROLL_STATE_SETTLING){
-            adjustPosition();
+            adjustPosition(state);
         }else if (state == SCROLL_STATE_IDLE){
 
         }
     }
-    private void adjustPosition(){
+    private void adjustPosition(int state){
         int count = getLayoutManager().getChildCount();
         if (count < 2) return;
+
         for (int i = 0;i< 2;i++){
             View childView = getChildAt(i);
             int percents = getVisibilityPercents(childView);
             if (percents > 50){
                 int targetPosition = getChildAdapterPosition(childView);
+                Log.i("ChanelView","adjustPosition = "+targetPosition+",percents = "+percents+",state = "+state);
                 smoothScrollToPosition(targetPosition);
             }
         }
@@ -117,5 +132,10 @@ public class ChanelView extends RecyclerView {
 
     private boolean viewIsPartiallyHiddenTop() {
         return mCurrentViewRect.top > 0;
+    }
+
+    @Override
+    public void onScrollDirectionChanged(ScrollDirectionDetector.ScrollDirection scrollDirection) {
+        mOldScrollDirection = scrollDirection;
     }
 }

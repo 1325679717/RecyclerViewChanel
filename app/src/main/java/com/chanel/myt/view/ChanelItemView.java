@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.chanel.myt.R;
 import com.chanel.myt.utils.DisPlayUtils;
@@ -19,7 +20,7 @@ public class ChanelItemView extends LinearLayout {
     private float parallax = 0;
 
     private int parallaxOffset;
-    private ImageView imageView;
+    private TextView textView;
     public void setParallaxOffset(int parallaxOffset) {
         this.parallaxOffset = parallaxOffset;
     }
@@ -61,37 +62,39 @@ public class ChanelItemView extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        imageView = findViewById(R.id.iv);
+        textView = findViewById(R.id.iv);
     }
 
     public void parallaxOpen(float f){
         parallax = f;
-        imageView.getLayoutParams().height = (int) (opendHeight *f);
-        imageView.getLayoutParams().width = opendWidth;
+        textView.getLayoutParams().height = opendHeight;
+        textView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
-    public void parallaxFolded(float f){//0-1
+    public void parallaxOpening(float f){//0-1
         parallax = f;
-
-        imageView.getLayoutParams().height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
-        imageView.getLayoutParams().width = opendWidth;
-        requestLayout();
+        int height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
+        if (height >= foldedHeight && height <= opendHeight) {
+            textView.getLayoutParams().height = height;
+            textView.getLayoutParams().width = opendWidth;
+            requestLayout();
+        }
     }
-    public void parallax(float f){
+    public void parallaxFolded(float f){
         parallax = f;
-        imageView.getLayoutParams().height = foldedHeight;
-        imageView.getLayoutParams().width = opendWidth;
+        textView.getLayoutParams().height = foldedHeight;
+        textView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
+        textView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
 //        int imgHeight =
 //        setMeasuredDimension();
     }
 
-    public ImageView getImageView() {
-        return imageView;
+    public TextView getImageView() {
+        return textView;
     }
 }
