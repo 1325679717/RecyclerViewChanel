@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.chanel.myt.utils.ViewUtils;
@@ -15,7 +16,7 @@ import com.chanel.myt.utils.ViewUtils;
 public class ChanelView extends RecyclerView{
     private float velocityFactor = 0.25f;
     private float mTriggerOffset = 0.5f;
-    private int mFirstTopWhenDragging;
+    private int mPositionOnTouchDown;
     private View currentView;//当前展开的view
     private Rect mCurrentViewRect = new Rect();
     public ChanelView(@NonNull Context context) {
@@ -44,8 +45,15 @@ public class ChanelView extends RecyclerView{
         if (childCount > 0) {
             int curPosition = ViewUtils.getCenterOpenChildViewPosition(this);
             int flingCount = getFlingCount(velocityY, ChanelItemView.opendHeight);
-            int targetPostion = curPosition + flingCount;
-            smoothScrollToPosition(safeTargetPosition(targetPostion,getItemCount()));
+            flingCount = Math.max(-1, Math.min(1, flingCount));
+            int targetPosition = flingCount == 0 ? curPosition : mPositionOnTouchDown + flingCount;
+//            int targetPostion = curPosition + flingCount;
+            if (targetPosition > curPosition && targetPosition < (curPosition+getChildCount())){
+                int top = getChildAt(targetPosition - curPosition).getTop();
+                smoothScrollBy(0,top);
+            }else {
+                smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()));
+            }
             Log.i("ChanelView","adjustPostionY flingCount = "+flingCount+",curPosition = "+curPosition);
         }
     }
@@ -108,13 +116,23 @@ public class ChanelView extends RecyclerView{
         super.onScrollStateChanged(state);
         if (state == SCROLL_STATE_DRAGGING){
             if (currentView != null) {
-                mFirstTopWhenDragging = currentView.getTop();
+//                mFirstTopWhenDragging = currentView.getTop();
             }
         }else if (state == SCROLL_STATE_SETTLING){
         }else if (state == SCROLL_STATE_IDLE){
+            Log.i("ChanelView","onScrollStateChanged = "+ViewUtils.getCenterOpenChildViewPosition(this));
 
 //            adjustPosition(state);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN){
+            mPositionOnTouchDown = ViewUtils.getCenterOpenChildViewPosition(this);
+            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

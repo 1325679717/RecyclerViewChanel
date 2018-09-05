@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.rv);
         initData();
-        LinearLayoutManagerWithSmoothScroller layout = new LinearLayoutManagerWithSmoothScroller(this, LinearLayoutManager.VERTICAL,
+        LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(layout);
         recyclerView.setAdapter(new MyAdapter(list,this));
