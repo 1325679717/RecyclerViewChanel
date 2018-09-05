@@ -35,4 +35,16 @@ public class ViewUtils {
         }
         return false;
     }
+    public static View getOpenChildView(RecyclerView recyclerView){
+        int childCount = recyclerView.getChildCount();
+        if (childCount > 0) {
+            for (int i = 0; i < childCount; i++) {
+                View child = recyclerView.getChildAt(i);
+                if (isChildOnOpen(recyclerView,child)) {
+                    return child;
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -17,7 +17,12 @@ public class ChanelView extends RecyclerView{
     private float velocityFactor = 0.25f;
     private float mTriggerOffset = 0.5f;
     private int mPositionOnTouchDown;
+    private int mPositionBeforeScroll;
     private View currentView;//当前展开的view
+    private int mFirstTopWhenDragging;
+    int mMaxTopWhenDragging = Integer.MIN_VALUE;
+    boolean mNeedAdjust;
+    int mMinTopWhenDragging = Integer.MAX_VALUE;
     private Rect mCurrentViewRect = new Rect();
     public ChanelView(@NonNull Context context) {
         super(context);
@@ -47,19 +52,14 @@ public class ChanelView extends RecyclerView{
             int flingCount = getFlingCount(velocityY, ChanelItemView.opendHeight);
             flingCount = Math.max(-1, Math.min(1, flingCount));
             int targetPosition = flingCount == 0 ? curPosition : mPositionOnTouchDown + flingCount;
-//            int targetPostion = curPosition + flingCount;
-            if (targetPosition > curPosition && targetPosition < (curPosition+getChildCount())){
-                int top = getChildAt(targetPosition - curPosition).getTop();
-                smoothScrollBy(0,top);
-            }else {
-                smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()));
-            }
+            smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()),curPosition);
             Log.i("ChanelView","adjustPostionY flingCount = "+flingCount+",curPosition = "+curPosition);
         }
     }
     private int getItemCount() {
         return getAdapter().getItemCount();
     }
+
     private int getFlingCount(int velocity, int cellSize) {
         if (velocity == 0) {
             return 0;
@@ -95,7 +95,6 @@ public class ChanelView extends RecyclerView{
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
             float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);
             if(f >=1){//展开的
-                currentView = childView;
                 chanelItemView.setParallaxOffset(1);
                 chanelItemView.setState(ChanelItemView.OPEN);
                 chanelItemView.parallaxOpen(1.0f);
@@ -115,17 +114,49 @@ public class ChanelView extends RecyclerView{
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
         if (state == SCROLL_STATE_DRAGGING){
+            currentView = ViewUtils.getOpenChildView(this);
+            mNeedAdjust = true;
             if (currentView != null) {
-//                mFirstTopWhenDragging = currentView.getTop();
+                mFirstTopWhenDragging = currentView.getTop();
+                mPositionBeforeScroll = getChildLayoutPosition(currentView);
             }
-        }else if (state == SCROLL_STATE_SETTLING){
-        }else if (state == SCROLL_STATE_IDLE){
-            Log.i("ChanelView","onScrollStateChanged = "+ViewUtils.getCenterOpenChildViewPosition(this));
 
+        }else if (state == SCROLL_STATE_SETTLING){
+            mNeedAdjust = false;
+            currentView = null;
+        }else if (state == SCROLL_STATE_IDLE){
+            int targetPosition = ViewUtils.getCenterOpenChildViewPosition(this);
+            int currentPosition = targetPosition;
+            if (mNeedAdjust) {
+                if (currentView != null) {
+                    Log.i("ChanelView", "onScrollStateChanged = " + ViewUtils.getCenterOpenChildViewPosition(this) + ",mPositionBeforeScroll = " + mPositionBeforeScroll);
+                    targetPosition = getChildAdapterPosition(currentView);
+                    currentPosition = targetPosition;
+                    int spanY = currentView.getTop() - mFirstTopWhenDragging;
+                    Log.i("ChanelView","currentView.getTop() = "+(currentView.getTop())+",mFirstTopWhenDragging = "+mFirstTopWhenDragging);
+                    if (spanY > currentView.getHeight() * mTriggerOffset && currentView.getTop() >= mMaxTopWhenDragging) {
+                        targetPosition++;
+                    } else if (spanY < currentView.getHeight() * -mTriggerOffset && currentView.getTop() <= mMinTopWhenDragging) {
+                        targetPosition--;
+                    }
+                }
+                smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()), currentPosition);
+            }
 //            adjustPosition(state);
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        // recording the max/min value in touch track
+        if (e.getAction() == MotionEvent.ACTION_MOVE) {
+            if (currentView != null) {
+                mMaxTopWhenDragging = Math.max(currentView.getTop(), mMaxTopWhenDragging);
+                mMinTopWhenDragging = Math.min(currentView.getTop(), mMinTopWhenDragging);
+            }
+        }
+        return super.onTouchEvent(e);
+    }
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN){
@@ -135,11 +166,17 @@ public class ChanelView extends RecyclerView{
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
-    public void smoothScrollToPosition(int position) {
-        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext());
-        linearSmoothScroller.setTargetPosition(position);
-        getLayoutManager().startSmoothScroll(linearSmoothScroller);
+    public void smoothScrollToPosition(int targetPosition,int currentPosition) {
+        if (targetPosition > currentPosition && targetPosition < (currentPosition+getChildCount())){
+            Log.i("ChanelView","smoothScrollToPosition current = "+(targetPosition - currentPosition)+",targetPosition = "+targetPosition);
+            int top = getChildAt(targetPosition - currentPosition).getTop();
+            smoothScrollBy(0,top);
+        }else {
+            /*LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext());
+            linearSmoothScroller.setTargetPosition(targetPosition);
+            getLayoutManager().startSmoothScroll(linearSmoothScroller);*/
+            super.smoothScrollToPosition(targetPosition);
+        }
     }
 
     private int safeTargetPosition(int position, int count) {
