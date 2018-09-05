@@ -4,20 +4,19 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-import com.chanel.myt.R;
-import com.chanel.myt.utils.ScrollDirectionDetector;
+import com.chanel.myt.utils.ViewUtils;
 
-public class ChanelView extends RecyclerView implements ScrollDirectionDetector.OnDetectScrollListener {
-    private ScrollDirectionDetector scrollDirectionDetector;
+public class ChanelView extends RecyclerView{
     private float velocityFactor = 0.25f;
-    private ScrollDirectionDetector.ScrollDirection mOldScrollDirection = null;
+    private float mTriggerOffset = 0.5f;
+    private int mFirstTopWhenDragging;
+    private View currentView;//当前展开的view
     private Rect mCurrentViewRect = new Rect();
     public ChanelView(@NonNull Context context) {
         super(context);
@@ -36,14 +35,34 @@ public class ChanelView extends RecyclerView implements ScrollDirectionDetector.
 
     @Override
     public boolean fling(int velocityX, int velocityY) {
-        return super.fling((int) (velocityX *velocityFactor), (int) (velocityY *velocityFactor));
+        boolean fling = super.fling((int) (velocityX *velocityFactor), (int) (velocityY *velocityFactor));
+        adjustPostionY(velocityY);
+        return fling;
     }
-
+    private void adjustPostionY(int velocityY){
+        int childCount = getChildCount();
+        if (childCount > 0) {
+            int curPosition = ViewUtils.getCenterOpenChildViewPosition(this);
+            int flingCount = getFlingCount(velocityY, ChanelItemView.opendHeight);
+            int targetPostion = curPosition + flingCount;
+            smoothScrollToPosition(safeTargetPosition(targetPostion,getItemCount()));
+            Log.i("ChanelView","adjustPostionY flingCount = "+flingCount+",curPosition = "+curPosition);
+        }
+    }
+    private int getItemCount() {
+        return getAdapter().getItemCount();
+    }
+    private int getFlingCount(int velocity, int cellSize) {
+        if (velocity == 0) {
+            return 0;
+        }
+        int sign = velocity > 0 ? 1 : -1;
+        return (int) (sign * Math.ceil((velocity * sign * velocityFactor / cellSize)
+                - mTriggerOffset));
+    }
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-//        scrollDirectionDetector = new ScrollDirectionDetector(this);
-//        scrollDirectionDetector.onDetectedListScroll(getLayoutManager(),0);
     }
 
     private void onCreate(){
@@ -61,23 +80,24 @@ public class ChanelView extends RecyclerView implements ScrollDirectionDetector.
         });
     }
     private void scroll(@NonNull RecyclerView recyclerView, int dx, int dy){
-        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) getLayoutManager();
-        int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-        int visibleItemCount = linearLayoutManager.getChildCount();
+        int visibleItemCount = getChildCount();
         for (int i = 0;i< visibleItemCount;i++){
-            View childView = linearLayoutManager.getChildAt(i);
+            View childView = getChildAt(i);
             if (!(childView instanceof ChanelItemView)) break;
-            ChanelItemView chanelItemView = (ChanelItemView) linearLayoutManager.getChildAt(i);
-            float f = (1 - ((float)chanelItemView.getTop())/chanelItemView.getOpendHeight());
+            ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
+            float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);
             if(f >=1){//展开的
+                currentView = childView;
                 chanelItemView.setParallaxOffset(1);
+                chanelItemView.setState(ChanelItemView.OPEN);
                 chanelItemView.parallaxOpen(1.0f);
             }else if (f >= 0 && f < 1){//正在展开的
                 chanelItemView.setParallaxOffset(0);
+                chanelItemView.setState(ChanelItemView.FOLDED);
                 chanelItemView.parallaxOpening(f);
             }else {//折叠的
                 chanelItemView.setParallaxOffset(0);
+                chanelItemView.setState(ChanelItemView.CLOSE);
                 chanelItemView.parallaxFolded(0.2f);
             }
         }
@@ -86,56 +106,47 @@ public class ChanelView extends RecyclerView implements ScrollDirectionDetector.
     @Override
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
-        Log.i("ChanelView","onScrollStateChanged state = "+state+",mOldScrollDirection = "+mOldScrollDirection);
         if (state == SCROLL_STATE_DRAGGING){
-
+            if (currentView != null) {
+                mFirstTopWhenDragging = currentView.getTop();
+            }
         }else if (state == SCROLL_STATE_SETTLING){
-            adjustPosition(state);
         }else if (state == SCROLL_STATE_IDLE){
 
+//            adjustPosition(state);
         }
     }
-    private void adjustPosition(int state){
-        int count = getLayoutManager().getChildCount();
-        if (count < 2) return;
 
-        for (int i = 0;i< 2;i++){
+    @Override
+    public void smoothScrollToPosition(int position) {
+        LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext());
+        linearSmoothScroller.setTargetPosition(position);
+        getLayoutManager().startSmoothScroll(linearSmoothScroller);
+    }
+
+    private int safeTargetPosition(int position, int count) {
+        if (position < 0) {
+            return 0;
+        }
+        if (position >= count) {
+            return count - 1;
+        }
+        return position;
+    }
+    private int getYLoactionOnScreen(View view){
+        int[] points = new int[2];
+        view.getLocationOnScreen(points);
+        return points[1];
+    }
+    private void adjustPosition(int state){
+        int count = getChildCount();
+        for (int i = 0;i<count;i++){
             View childView = getChildAt(i);
-            int percents = getVisibilityPercents(childView);
-            if (percents > 50){
+            if (childView.getHeight() > ChanelItemView.opendHeight * mTriggerOffset){
                 int targetPosition = getChildAdapterPosition(childView);
-                Log.i("ChanelView","adjustPosition = "+targetPosition+",percents = "+percents+",state = "+state);
                 smoothScrollToPosition(targetPosition);
             }
         }
     }
-    public int getVisibilityPercents(View view) {
 
-        int percents = 100;
-
-        view.getLocalVisibleRect(mCurrentViewRect);
-
-        int height = view.getHeight();
-
-        if(viewIsPartiallyHiddenTop()){
-            // view is partially hidden behind the top edge
-            percents = (height - mCurrentViewRect.top) * 100 / height;
-        } else if(viewIsPartiallyHiddenBottom(height)){
-            percents = mCurrentViewRect.bottom * 100 / height;
-        }
-
-        return percents;
-    }
-    private boolean viewIsPartiallyHiddenBottom(int height) {
-        return mCurrentViewRect.bottom > 0 && mCurrentViewRect.bottom < height;
-    }
-
-    private boolean viewIsPartiallyHiddenTop() {
-        return mCurrentViewRect.top > 0;
-    }
-
-    @Override
-    public void onScrollDirectionChanged(ScrollDirectionDetector.ScrollDirection scrollDirection) {
-        mOldScrollDirection = scrollDirection;
-    }
 }

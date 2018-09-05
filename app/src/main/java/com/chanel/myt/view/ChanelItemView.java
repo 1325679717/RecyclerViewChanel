@@ -6,13 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chanel.myt.R;
 import com.chanel.myt.utils.DisPlayUtils;
 
-public class ChanelItemView extends LinearLayout {
-    private int opendHeight = 0;
+public class ChanelItemView extends RelativeLayout {
+    public static int opendHeight = 0;
+
+    public static int OPEN = 0;
+
+    public static int FOLDED = 1;
+
+    public static int CLOSE = 2;
 
     private int opendWidth = 0;
     private int foldedHeight = 0;
@@ -21,6 +28,17 @@ public class ChanelItemView extends LinearLayout {
 
     private int parallaxOffset;
     private TextView textView;
+
+    private int state = OPEN;
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     public void setParallaxOffset(int parallaxOffset) {
         this.parallaxOffset = parallaxOffset;
     }
@@ -29,9 +47,9 @@ public class ChanelItemView extends LinearLayout {
         return foldedHeight;
     }
 
-    public int getOpendHeight() {
+    /*public int getOpendHeight() {
         return opendHeight;
-    }
+    }*/
 
     public ChanelItemView(Context context) {
         super(context);
