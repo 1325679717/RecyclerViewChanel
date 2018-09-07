@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/*
+* 1.上拉会滑动多个，并且可能停在item任何位置(可能smoothScrollToPosition->(targetPosition > currentPosition))
+* 2.拖动停留
+* 3.
+* */
 public class MainActivity extends AppCompatActivity {
     private ChanelView recyclerView;
     List<ColorBean> list = new ArrayList<>();

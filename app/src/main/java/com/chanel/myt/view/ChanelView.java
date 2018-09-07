@@ -53,7 +53,6 @@ public class ChanelView extends RecyclerView{
             flingCount = Math.max(-1, Math.min(1, flingCount));
             int targetPosition = flingCount == 0 ? curPosition : mPositionOnTouchDown + flingCount;
             smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()),curPosition);
-            Log.i("ChanelView","adjustPostionY flingCount = "+flingCount+",curPosition = "+curPosition);
         }
     }
     private int getItemCount() {
@@ -120,7 +119,7 @@ public class ChanelView extends RecyclerView{
                 mFirstTopWhenDragging = currentView.getTop();
                 mPositionBeforeScroll = getChildLayoutPosition(currentView);
             }
-
+            Log.i("ChanelView","onScrollStateChanged currentView position = "+getChildAdapterPosition(currentView));
         }else if (state == SCROLL_STATE_SETTLING){
             mNeedAdjust = false;
             currentView = null;
@@ -133,13 +132,14 @@ public class ChanelView extends RecyclerView{
                     targetPosition = getChildAdapterPosition(currentView);
                     currentPosition = targetPosition;
                     int spanY = currentView.getTop() - mFirstTopWhenDragging;
-                    Log.i("ChanelView","currentView.getTop() = "+(currentView.getTop())+",mFirstTopWhenDragging = "+mFirstTopWhenDragging);
-                    if (spanY > currentView.getHeight() * mTriggerOffset && currentView.getTop() >= mMaxTopWhenDragging) {
+                    Log.i("ChanelView","currentView.getTop() = "+(currentView.getTop())+",mFirstTopWhenDragging = "+mFirstTopWhenDragging+",targetPosition = "+targetPosition);
+                    if (spanY < currentView.getHeight() * -mTriggerOffset) {
                         targetPosition++;
-                    } else if (spanY < currentView.getHeight() * -mTriggerOffset && currentView.getTop() <= mMinTopWhenDragging) {
+                    } else if (spanY > currentView.getHeight() * mTriggerOffset) {
                         targetPosition--;
                     }
                 }
+                Log.i("ChanelView","onScrollStateChanged targetPosition = "+targetPosition);
                 smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()), currentPosition);
             }
 //            adjustPosition(state);
@@ -167,15 +167,15 @@ public class ChanelView extends RecyclerView{
     }
 
     public void smoothScrollToPosition(int targetPosition,int currentPosition) {
-        if (targetPosition > currentPosition && targetPosition < (currentPosition+getChildCount())){
-            Log.i("ChanelView","smoothScrollToPosition current = "+(targetPosition - currentPosition)+",targetPosition = "+targetPosition);
+        Log.i("ChanelView","smoothScrollToPosition targetPosition = "+targetPosition+",currentPosition = "+currentPosition+",count = "+getItemCount());
+        if (targetPosition > currentPosition && targetPosition < (getItemCount())){
+//            Log.i("ChanelView","smoothScrollToPosition current = "+(targetPosition - currentPosition)+",targetPosition = "+targetPosition);
             int top = getChildAt(targetPosition - currentPosition).getTop();
             smoothScrollBy(0,top);
         }else {
-            /*LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext());
+            LinearSmoothScroller linearSmoothScroller = new LinearSmoothScroller(getContext());
             linearSmoothScroller.setTargetPosition(targetPosition);
-            getLayoutManager().startSmoothScroll(linearSmoothScroller);*/
-            super.smoothScrollToPosition(targetPosition);
+            getLayoutManager().startSmoothScroll(linearSmoothScroller);
         }
     }
 
@@ -188,20 +188,6 @@ public class ChanelView extends RecyclerView{
         }
         return position;
     }
-    private int getYLoactionOnScreen(View view){
-        int[] points = new int[2];
-        view.getLocationOnScreen(points);
-        return points[1];
-    }
-    private void adjustPosition(int state){
-        int count = getChildCount();
-        for (int i = 0;i<count;i++){
-            View childView = getChildAt(i);
-            if (childView.getHeight() > ChanelItemView.opendHeight * mTriggerOffset){
-                int targetPosition = getChildAdapterPosition(childView);
-                smoothScrollToPosition(targetPosition);
-            }
-        }
-    }
+
 
 }
