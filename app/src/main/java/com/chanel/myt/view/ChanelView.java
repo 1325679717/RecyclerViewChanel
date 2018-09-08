@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -52,7 +53,8 @@ public class ChanelView extends RecyclerView{
             int flingCount = getFlingCount(velocityY, ChanelItemView.opendHeight);
             flingCount = Math.max(-1, Math.min(1, flingCount));
             int targetPosition = flingCount == 0 ? curPosition : mPositionOnTouchDown + flingCount;
-            smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()),curPosition);
+//            smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()),curPosition);
+            scollToPosition(safeTargetPosition(targetPosition,getItemCount()));
         }
     }
     private int getItemCount() {
@@ -140,7 +142,8 @@ public class ChanelView extends RecyclerView{
                     }
                 }
                 Log.i("ChanelView","onScrollStateChanged targetPosition = "+targetPosition);
-                smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()), currentPosition);
+//                smoothScrollToPosition(safeTargetPosition(targetPosition, getItemCount()), currentPosition);
+                scollToPosition(safeTargetPosition(targetPosition,getItemCount()));
             }
 //            adjustPosition(state);
         }
@@ -166,8 +169,7 @@ public class ChanelView extends RecyclerView{
         return super.dispatchTouchEvent(ev);
     }
 
-    public void smoothScrollToPosition(int targetPosition,int currentPosition) {
-        Log.i("ChanelView","smoothScrollToPosition targetPosition = "+targetPosition+",currentPosition = "+currentPosition+",count = "+getItemCount());
+/*    public void smoothScrollToPosition(int targetPosition,int currentPosition) {
         if (targetPosition > currentPosition && targetPosition < (getItemCount())){
 //            Log.i("ChanelView","smoothScrollToPosition current = "+(targetPosition - currentPosition)+",targetPosition = "+targetPosition);
             int top = getChildAt(targetPosition - currentPosition).getTop();
@@ -177,7 +179,7 @@ public class ChanelView extends RecyclerView{
             linearSmoothScroller.setTargetPosition(targetPosition);
             getLayoutManager().startSmoothScroll(linearSmoothScroller);
         }
-    }
+    }*/
 
     private int safeTargetPosition(int position, int count) {
         if (position < 0) {
@@ -188,6 +190,25 @@ public class ChanelView extends RecyclerView{
         }
         return position;
     }
-
+    public void scollToPosition(int n) {
+        //拿到当前屏幕可见的第一个position跟最后一个postion
+        LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
+        int firstItem = layoutManager.findFirstVisibleItemPosition();
+        int lastItem = layoutManager.findLastVisibleItemPosition();
+        //区分情况
+        if (n <= firstItem ){
+            //当要置顶的项在当前显示的第一个项的前面时
+            smoothScrollToPosition(n);
+        }else if ( n <= lastItem ){
+            //当要置顶的项已经在屏幕上显示时
+            int top = getChildAt(n - firstItem).getTop();
+            smoothScrollBy(0,top);
+        }else{
+            //当要置顶的项在当前显示的最后一项的后面时
+            smoothScrollToPosition(n);
+            //这里这个变量是用在RecyclerView滚动监听里面的
+//            move = true;
+        }
+    }
 
 }
