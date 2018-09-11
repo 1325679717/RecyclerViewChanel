@@ -3,9 +3,13 @@ package com.chanel.myt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.chanel.myt.adapter.MyAdapter;
 import com.chanel.myt.bean.ColorBean;
+import com.chanel.myt.listener.ItemClickListener;
 import com.chanel.myt.utils.LinearLayoutManagerWithSmoothScroller;
 import com.chanel.myt.view.ChanelView;
 
@@ -18,8 +22,9 @@ import java.util.List;
 * 2.拖动停留
 * 3.
 * */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemClickListener {
     private ChanelView recyclerView;
+    private MyAdapter myAdapter;
     List<ColorBean> list = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(layout);
-        recyclerView.setAdapter(new MyAdapter(list,this));
+        myAdapter = new MyAdapter(list,this);
+        recyclerView.setAdapter(myAdapter);
+        myAdapter.addOnItemClickListener(this);
+
     }
     private void initData(){
         ColorBean colorBean0 = new ColorBean(R.color.red,1);
@@ -51,5 +59,11 @@ public class MainActivity extends AppCompatActivity {
         list.add(colorBean6);
         list.add(colorBean7);
         list.add(colorBean8);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (position < myAdapter.getItemCount() - 2)
+            recyclerView.onlickScrollToPosition(position);
     }
 }

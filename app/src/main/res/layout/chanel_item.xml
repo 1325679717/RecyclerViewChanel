@@ -7,15 +7,16 @@
         android:textColor="@android:color/white"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <include layout="@layout/chanel_item_text"
+        android:layout_height="300dp" />
+<!--    <include layout="@layout/chanel_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
-<!--    <com.chanel.myt.view.ChanelItemText
+        android:layout_centerHorizontal="true"/>-->
+    <com.chanel.myt.view.ChanelItemText
+        android:id="@+id/chanelItemText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>-->
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 </com.chanel.myt.view.ChanelItemView>

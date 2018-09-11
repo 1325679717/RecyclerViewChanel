@@ -22,7 +22,7 @@ public class ChanelItemView extends RelativeLayout {
     public static int CLOSE = 2;
 
     private int opendWidth = 0;
-    private int foldedHeight = 0;
+    public static int foldedHeight = 0;
 
     private float parallax = 0;
 

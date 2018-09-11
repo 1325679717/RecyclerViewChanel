@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.chanel.myt.R;
 import com.chanel.myt.bean.ColorBean;
 import com.chanel.myt.utils.DisPlayUtils;
+import com.chanel.myt.view.ChanelItemText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,14 @@ public class MyAdapter extends RecyclerView.Adapter {
     int FOOTER = 2;
     int disPlayWidth = 0;
     List<ColorBean> list;
+    private OnItemClickListener onItemClickListener;
+    public interface OnItemClickListener{
+        void onItemClick(View v,int position);
+    }
 
+    public void addOnItemClickListener(OnItemClickListener listener){
+        onItemClickListener = listener;
+    }
     public MyAdapter(List<ColorBean> list, Context context) {
         this.list = list;
         disPlayWidth = DisPlayUtils.getScreenWidth(context);
@@ -37,14 +45,15 @@ public class MyAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
             TextView textView = myViewHolder.textView;
             textView.setTag(viewHolder.getLayoutPosition());
             textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
-            textView.setText(viewHolder.getLayoutPosition()+"");
-            myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
+//            textView.setText(viewHolder.getLayoutPosition()+"");
+            myViewHolder.chanelItemText.setBigText("即将于精品店上市");
+            myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
 
         }else {
             FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
@@ -55,6 +64,13 @@ public class MyAdapter extends RecyclerView.Adapter {
             footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
 //            footerViewHolder.imageView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
         }
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onItemClickListener.onItemClick(v,viewHolder.getLayoutPosition());
+            }
+        });
     }
 
     @Override
@@ -71,9 +87,11 @@ public class MyAdapter extends RecyclerView.Adapter {
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView textView;
+        ChanelItemText chanelItemText;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.iv);
+            chanelItemText = itemView.findViewById(R.id.chanelItemText);
         }
     }
     class FooterViewHolder extends RecyclerView.ViewHolder{

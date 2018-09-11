@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.chanel.myt.R;
+import com.chanel.myt.adapter.MyAdapter;
 import com.chanel.myt.listener.ItemClickListener;
 import com.chanel.myt.utils.ViewUtils;
 
@@ -76,19 +78,6 @@ public class ChanelView extends RecyclerView {
     }
 
     private void onCreate(){
-        addOnItemTouchListener(new ItemClickListener(this, new ItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                currentView = ViewUtils.getOpenChildView(ChanelView.this);
-                scollToPosition(position,position);
-//                Toast.makeText(getContext(),"position = "+position,1).show();
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
-
-            }
-        }));
         addOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -104,6 +93,7 @@ public class ChanelView extends RecyclerView {
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
             float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);
+            setItemViewPercent(chanelItemView,f);
             if(f >=1){//展开的
                 chanelItemView.setParallaxOffset(1);
                 chanelItemView.setState(ChanelItemView.OPEN);
@@ -119,7 +109,10 @@ public class ChanelView extends RecyclerView {
             }
         }
     }
-
+    public void setItemViewPercent(ChanelItemView chanelItemView,float percent){
+        ChanelItemText chanelItemText = chanelItemView.findViewById(R.id.chanelItemText);
+        chanelItemText.setItemViewPercent(percent);
+    }
     @Override
     public void onScrollStateChanged(int state) {
         super.onScrollStateChanged(state);
@@ -181,27 +174,33 @@ public class ChanelView extends RecyclerView {
         }
         return position;
     }
-    public void scollToPosition(int n,int type) {
-        //拿到当前屏幕可见的第一个position跟最后一个postion
+    public void onlickScrollToPosition(int targetPosition){
         LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
         int firstItem = layoutManager.findFirstVisibleItemPosition();
         int lastItem = layoutManager.findLastVisibleItemPosition();
-        //区分情况
-        if (n <= firstItem ){
-            //当要置顶的项在当前显示的第一个项的前面时
-            smoothScrollToPosition(n);
-            Log.i("ChanelView","scollToPosition  if n= "+n+",firstItem = "+firstItem+",type = "+type);
-        }else if (n <= lastItem ){
-            //当要置顶的项已经在屏幕上显示时
-            int top = getChildAt(n - firstItem).getTop();
+        if (targetPosition >0 && targetPosition <=lastItem){
+            int position = targetPosition - firstItem;
+//            int top = getChildAt(position).getTop() * position;
+            int top = ChanelItemView.opendHeight * position;
             smoothScrollBy(0,top);
-            Log.i("ChanelView","scollToPosition  else if n= "+n+",lastItem = "+lastItem+",top = "+top+",firstItem = "+firstItem+",type = "+type);
+        }
+    }
+    private void scollToPosition(int targetPosition,int type) {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
+        int firstItem = layoutManager.findFirstVisibleItemPosition();
+        int lastItem = layoutManager.findLastVisibleItemPosition();
+        if (targetPosition <= firstItem ){//targetPosition <= firstItem
+            smoothScrollToPosition(targetPosition);
+            Log.i("ChanelView","scollToPosition  if targetPosition= "+targetPosition+",type = "+type);
+        }else if (targetPosition <= lastItem ){
+            int position = targetPosition - firstItem;
+            int top = getChildAt(position).getTop();
+            smoothScrollBy(0,top);
+            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type = "+type);
         }else{
-            //当要置顶的项在当前显示的最后一项的后面时
-            smoothScrollToPosition(n);
-            Log.i("ChanelView","scollToPosition  else n= "+n+",firstItem = "+firstItem+",lastItem = "+lastItem+",type = "+type);
-            //这里这个变量是用在RecyclerView滚动监听里面的
-//            move = true;
+            smoothScrollToPosition(targetPosition);
+            Log.i("ChanelView","scollToPosition  else targetPosition= "+",type = "+type);
+
         }
     }
 
