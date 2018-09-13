@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
-    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
+//    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
     int NORMAL = 1;
     int FOOTER = 2;
     int disPlayWidth = 0;
@@ -50,9 +50,10 @@ public class MyAdapter extends RecyclerView.Adapter {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
             TextView textView = myViewHolder.textView;
             textView.setTag(viewHolder.getLayoutPosition());
+//            TextView.setBackground(imageView);
             textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
-//            textView.setText(viewHolder.getLayoutPosition()+"");
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
+            myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());
             myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
 
         }else {
@@ -60,6 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter {
             TextView textView = footerViewHolder.textView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
             layoutParams.width = disPlayWidth;
+//            layoutParams.height =
             textView.setLayoutParams(layoutParams);
             footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
 //            footerViewHolder.imageView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
