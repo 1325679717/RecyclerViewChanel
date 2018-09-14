@@ -20,7 +20,7 @@ public class ChanelItemView extends RelativeLayout {
     public static int foldedHeight = 0;
 
 
-    private ImageView textView;
+    private ImageView imageView;
 
     private ChanelItemText chanelItemText;
 
@@ -57,39 +57,39 @@ public class ChanelItemView extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        textView = findViewById(R.id.iv);
+        imageView = findViewById(R.id.iv);
         chanelItemText = findViewById(R.id.chanelItemText);
     }
     public void setItemViewPercent(float percent){
         chanelItemText.setItemViewPercent(percent);
     }
     public void parallaxOpen(float f){
-        textView.getLayoutParams().height = opendHeight;
-        textView.getLayoutParams().width = opendWidth;
+        imageView.getLayoutParams().height = opendHeight;
+        imageView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     public void parallaxOpening(float f){//0-1
         int height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
         if (height >= foldedHeight && height <= opendHeight) {
-            textView.getLayoutParams().height = height;
-            textView.getLayoutParams().width = opendWidth;
+            imageView.getLayoutParams().height = height;
+            imageView.getLayoutParams().width = opendWidth;
             requestLayout();
         }
     }
     public void parallaxFolded(float f){
-        textView.getLayoutParams().height = foldedHeight;
-        textView.getLayoutParams().width = opendWidth;
+        imageView.getLayoutParams().height = foldedHeight;
+        imageView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        textView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
+        imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
 //        int imgHeight =
 //        setMeasuredDimension();
     }
 
     public ImageView getImageView() {
-        return textView;
+        return imageView;
     }
 }

@@ -52,10 +52,10 @@ public class MyAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-            ImageView textView = myViewHolder.textView;
-            textView.setTag(viewHolder.getLayoutPosition());
+            ImageView imageView = myViewHolder.textView;
+            imageView.setTag(viewHolder.getLayoutPosition());
             Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
-           textView.setImageBitmap(bitmap);
+            imageView.setImageBitmap(bitmap);
 //            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
             myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
