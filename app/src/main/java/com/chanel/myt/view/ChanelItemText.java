@@ -52,24 +52,18 @@ public class ChanelItemText extends LinearLayout {
         setTextAlpha(percent);
         setTextLocation(percent);
     }
-    public void setTextLocation(float percent){
+    public void setTextLocation(float percent){//(0,1)
 
-        float foldeY = (ChanelItemView.foldedHeight * 1f - getHeight())/ 2;
+        float foldeY = ((ChanelItemView.foldedHeight + bigTv.getHeight()) * 1f - getHeight())/ 2;
         float openY = (ChanelItemView.opendHeight * 1f - getHeight())/ 2;
 
         float translationY = (openY - foldeY) * percent;
         int bigTvHeight = bigTv.getHeight();
-        if ((int)bigTv.getTag() == 1) {
-//            Log.i("ChanelItemText", "setTextLocation bigTvHeight= " + bigTvHeight + ",translationY = " + translationY);
-        }
-//        this.setTranslationY(translationY);
-        if (translationY < bigTvHeight){
 
-        }else {
-            if ((int)bigTv.getTag() == 1)
-            Log.i("ChanelItemText", "setTextLocation else= " + (translationY - bigTvHeight)+",foldeY = "+foldeY+",openY = "+openY+",percent = "+percent);
-            this.setTranslationY(translationY - bigTvHeight);
+        if ((int)bigTv.getTag() == 1) {
+            Log.i("ChanelItemText", "setTextLocation bigTvHeight= " + bigTvHeight + ",translationY = " + (bigTvHeight /translationY));
         }
+        this.setTranslationY(translationY);
     }
     public void setTextAlpha(float percent){
         bigTv.setAlpha(percent);

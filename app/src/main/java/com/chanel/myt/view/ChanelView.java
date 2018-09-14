@@ -11,6 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.chanel.myt.R;
@@ -79,6 +82,7 @@ public class ChanelView extends RecyclerView {
 
     private void onCreate(){
         addOnScrollListener(new OnScrollListener() {
+
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -92,18 +96,19 @@ public class ChanelView extends RecyclerView {
             View childView = getChildAt(i);
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
-            float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);
+            float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);//[0,1]
+            if ((int)chanelItemView.getTag() == 1){
+                Log.i("ChanelView","getTop = "+chanelItemView.getTop()+",openheight = "+ChanelItemView.opendHeight);
+                Log.i("ChanelView","f = "+f);
+            }
             setItemViewPercent(chanelItemView,f);
             if(f >=1){//展开的
-                chanelItemView.setParallaxOffset(1);
                 chanelItemView.setState(ChanelItemView.OPEN);
                 chanelItemView.parallaxOpen(1.0f);
-            }else if (f >= 0 && f < 1){//正在展开的
-                chanelItemView.setParallaxOffset(0);
+            }else if (f > 0 && f < 1){//正在展开的
                 chanelItemView.setState(ChanelItemView.FOLDED);
                 chanelItemView.parallaxOpening(f);
             }else {//折叠的
-                chanelItemView.setParallaxOffset(0);
                 chanelItemView.setState(ChanelItemView.CLOSE);
                 chanelItemView.parallaxFolded(0.2f);
             }
@@ -203,5 +208,6 @@ public class ChanelView extends RecyclerView {
 
         }
     }
+
 
 }

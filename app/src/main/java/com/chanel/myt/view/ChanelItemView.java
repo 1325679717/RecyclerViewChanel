@@ -24,9 +24,7 @@ public class ChanelItemView extends RelativeLayout {
     private int opendWidth = 0;
     public static int foldedHeight = 0;
 
-    private float parallax = 0;
 
-    private int parallaxOffset;
     private TextView textView;
 
     private int state = OPEN;
@@ -39,17 +37,7 @@ public class ChanelItemView extends RelativeLayout {
         this.state = state;
     }
 
-    public void setParallaxOffset(int parallaxOffset) {
-        this.parallaxOffset = parallaxOffset;
-    }
 
-    public int getFoldedHeight() {
-        return foldedHeight;
-    }
-
-    /*public int getOpendHeight() {
-        return opendHeight;
-    }*/
 
     public ChanelItemView(Context context) {
         super(context);
@@ -84,13 +72,11 @@ public class ChanelItemView extends RelativeLayout {
     }
 
     public void parallaxOpen(float f){
-        parallax = f;
         textView.getLayoutParams().height = opendHeight;
         textView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     public void parallaxOpening(float f){//0-1
-        parallax = f;
         int height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
         if (height >= foldedHeight && height <= opendHeight) {
             textView.getLayoutParams().height = height;
@@ -99,7 +85,6 @@ public class ChanelItemView extends RelativeLayout {
         }
     }
     public void parallaxFolded(float f){
-        parallax = f;
         textView.getLayoutParams().height = foldedHeight;
         textView.getLayoutParams().width = opendWidth;
         requestLayout();

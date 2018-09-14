@@ -1,5 +1,6 @@
 package com.chanel.myt;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         myAdapter = new MyAdapter(list,this);
         recyclerView.setAdapter(myAdapter);
         myAdapter.addOnItemClickListener(this);
-
     }
     private void initData(){
         ColorBean colorBean0 = new ColorBean(R.color.red,1);

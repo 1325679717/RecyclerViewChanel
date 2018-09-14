@@ -53,6 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter {
 //            TextView.setBackground(imageView);
             textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
+            myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
             myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());
             myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
 
