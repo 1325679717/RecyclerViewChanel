@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         ColorBean colorBean6 = new ColorBean(R.color.colorPrimary,1);
         ColorBean colorBean7 = new ColorBean(R.color.def_pointer_color,2);
         ColorBean colorBean8 = new ColorBean(R.color.def_pointer_color,2);
-        list.add(new ColorBean(R.drawable.image_one,1));
         list.add(new ColorBean(R.drawable.iv_splash_bg,1));
         list.add(new ColorBean(R.drawable.system_bg,1));
+        list.add(new ColorBean(R.drawable.image_one,1));
         list.add(new ColorBean(R.drawable.image_four,1));
         list.add(new ColorBean(R.drawable.image_one,1));
 //        list.add(colorBean5);
@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         list.add(colorBean8);
     }
 
-    @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-    }
     private void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();
         final LayoutAnimationController controller =

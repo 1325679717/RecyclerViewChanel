@@ -15,11 +15,6 @@ import com.chanel.myt.utils.DisPlayUtils;
 public class ChanelItemView extends RelativeLayout {
     public static int opendHeight = 0;
 
-    public static int OPEN = 0;
-
-    public static int FOLDED = 1;
-
-    public static int CLOSE = 2;
 
     private int opendWidth = 0;
     public static int foldedHeight = 0;
@@ -27,15 +22,9 @@ public class ChanelItemView extends RelativeLayout {
 
     private ImageView textView;
 
-    private int state = OPEN;
+    private ChanelItemText chanelItemText;
 
-    public int getState() {
-        return state;
-    }
 
-    public void setState(int state) {
-        this.state = state;
-    }
 
 
 
@@ -69,8 +58,11 @@ public class ChanelItemView extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         textView = findViewById(R.id.iv);
+        chanelItemText = findViewById(R.id.chanelItemText);
     }
-
+    public void setItemViewPercent(float percent){
+        chanelItemText.setItemViewPercent(percent);
+    }
     public void parallaxOpen(float f){
         textView.getLayoutParams().height = opendHeight;
         textView.getLayoutParams().width = opendWidth;

@@ -25,7 +25,6 @@ public class ChanelView extends RecyclerView {
     private float velocityFactor = 0.25f;
     private float mTriggerOffset = 0.5f;
     private int mPositionOnTouchDown;
-    private int mPositionBeforeScroll;
     private View currentView;//当前展开的view
     private int mFirstTopWhenDragging;
     int mMaxTopWhenDragging = Integer.MIN_VALUE;
@@ -75,10 +74,6 @@ public class ChanelView extends RecyclerView {
         return (int) (sign * Math.ceil((velocity * sign * velocityFactor / cellSize)
                 - mTriggerOffset));
     }
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-    }
 
     private void onCreate(){
         addOnScrollListener(new OnScrollListener() {
@@ -86,33 +81,26 @@ public class ChanelView extends RecyclerView {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                scroll(recyclerView,dx,dy);
+                scrolled(recyclerView,dx,dy);
             }
         });
     }
-    private void scroll(@NonNull RecyclerView recyclerView, int dx, int dy){
+    private void scrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
         int visibleItemCount = getChildCount();
         for (int i = 0;i< visibleItemCount;i++){
             View childView = getChildAt(i);
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
             float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);//[0,1]
-            setItemViewPercent(chanelItemView,f);
+            chanelItemView.setItemViewPercent(f);
             if(f >=1){//展开的
-                chanelItemView.setState(ChanelItemView.OPEN);
                 chanelItemView.parallaxOpen(1.0f);
             }else if (f > 0 && f < 1){//正在展开的
-                chanelItemView.setState(ChanelItemView.FOLDED);
                 chanelItemView.parallaxOpening(f);
             }else {//折叠的
-                chanelItemView.setState(ChanelItemView.CLOSE);
                 chanelItemView.parallaxFolded(0.2f);
             }
         }
-    }
-    public void setItemViewPercent(ChanelItemView chanelItemView,float percent){
-        ChanelItemText chanelItemText = chanelItemView.findViewById(R.id.chanelItemText);
-        chanelItemText.setItemViewPercent(percent);
     }
     @Override
     public void onScrollStateChanged(int state) {
@@ -122,7 +110,6 @@ public class ChanelView extends RecyclerView {
             currentView = ViewUtils.getOpenChildView(this);
             if (currentView != null) {
                 mFirstTopWhenDragging = currentView.getTop();
-                mPositionBeforeScroll = getChildLayoutPosition(currentView);
             }
         }else if (state == SCROLL_STATE_SETTLING){
 
@@ -146,7 +133,6 @@ public class ChanelView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        // recording the max/min value in touch track
         if (e.getAction() == MotionEvent.ACTION_MOVE) {
             if (currentView != null) {
                 mMaxTopWhenDragging = Math.max(currentView.getTop(), mMaxTopWhenDragging);
@@ -181,7 +167,6 @@ public class ChanelView extends RecyclerView {
         int lastItem = layoutManager.findLastVisibleItemPosition();
         if (targetPosition >0 && targetPosition <=lastItem){
             int position = targetPosition - firstItem;
-//            int top = getChildAt(position).getTop() * position;
             int top = ChanelItemView.opendHeight * position;
             smoothScrollBy(0,top);
         }
@@ -204,21 +189,5 @@ public class ChanelView extends RecyclerView {
 
         }
     }
-/*    @Override
-    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
-        if (getAdapter() != null && getLayoutManager() instanceof LinearLayoutManager) {
-            LayoutAnimationController.AnimationParameters animationParameters = params.layoutAnimationParameters;
-            if (animationParameters == null) {
-                AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-                alphaAnimation.setDuration(1000);
-                animationParameters = new LayoutAnimationController.AnimationParameters();
-                params.layoutAnimationParameters = animationParameters;
-            }
-            animationParameters.count = count;
-            animationParameters.index = index;
-        } else {
-            super.attachLayoutAnimationParameters(child, params, index, count);
-        }
-    }*/
 
 }

@@ -24,6 +24,7 @@ public class MyAdapter extends RecyclerView.Adapter {
     int NORMAL = 1;
     int FOOTER = 2;
     int disPlayWidth = 0;
+    float footerHeight = 0;
     List<ColorBean> list;
     private OnItemClickListener onItemClickListener;
     public interface OnItemClickListener{
@@ -36,6 +37,7 @@ public class MyAdapter extends RecyclerView.Adapter {
     public MyAdapter(List<ColorBean> list, Context context) {
         this.list = list;
         disPlayWidth = DisPlayUtils.getScreenWidth(context);
+        footerHeight = DisPlayUtils.getScreenHeight(context) * 0.2f;
     }
     @NonNull
     @Override
@@ -65,7 +67,7 @@ public class MyAdapter extends RecyclerView.Adapter {
             TextView textView = footerViewHolder.textView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
             layoutParams.width = disPlayWidth;
-//            layoutParams.height =
+            layoutParams.height = (int) footerHeight;
             textView.setLayoutParams(layoutParams);
             footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
 //            footerViewHolder.imageView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
