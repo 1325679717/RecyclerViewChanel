@@ -50,13 +50,13 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         ColorBean colorBean6 = new ColorBean(R.color.colorPrimary,1);
         ColorBean colorBean7 = new ColorBean(R.color.def_pointer_color,2);
         ColorBean colorBean8 = new ColorBean(R.color.def_pointer_color,2);
-        list.add(colorBean0);
-        list.add(colorBean1);
-        list.add(colorBean2);
-        list.add(colorBean3);
-        list.add(colorBean4);
-        list.add(colorBean5);
-        list.add(colorBean6);
+        list.add(new ColorBean(R.drawable.image_one,1));
+        list.add(new ColorBean(R.drawable.iv_splash_bg,1));
+        list.add(new ColorBean(R.drawable.system_bg,1));
+        list.add(new ColorBean(R.drawable.image_four,1));
+        list.add(new ColorBean(R.drawable.image_one,1));
+//        list.add(colorBean5);
+//        list.add(colorBean6);
         list.add(colorBean7);
         list.add(colorBean8);
     }

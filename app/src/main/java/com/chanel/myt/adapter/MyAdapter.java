@@ -1,6 +1,8 @@
 package com.chanel.myt.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -48,10 +50,11 @@ public class MyAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-            TextView textView = myViewHolder.textView;
+            ImageView textView = myViewHolder.textView;
             textView.setTag(viewHolder.getLayoutPosition());
-//            TextView.setBackground(imageView);
-            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
+            Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
+           textView.setImageBitmap(bitmap);
+//            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
             myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
             myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());
@@ -89,7 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter {
         return list.size();
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
+        ImageView textView;
         ChanelItemText chanelItemText;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -25,7 +25,7 @@ public class ChanelItemView extends RelativeLayout {
     public static int foldedHeight = 0;
 
 
-    private TextView textView;
+    private ImageView textView;
 
     private int state = OPEN;
 
@@ -97,7 +97,7 @@ public class ChanelItemView extends RelativeLayout {
 //        setMeasuredDimension();
     }
 
-    public TextView getImageView() {
+    public ImageView getImageView() {
         return textView;
     }
 }
