@@ -58,11 +58,7 @@ public class ChanelItemText extends LinearLayout {
         float openY = (ChanelItemView.opendHeight * 1f - getHeight())/ 2;
 
         float translationY = (openY - foldeY) * percent;
-        int bigTvHeight = bigTv.getHeight();
 
-        if ((int)bigTv.getTag() == 1) {
-            Log.i("ChanelItemText", "setTextLocation bigTvHeight= " + bigTvHeight + ",translationY = " + (bigTvHeight /translationY));
-        }
         this.setTranslationY(translationY);
     }
     public void setTextAlpha(float percent){

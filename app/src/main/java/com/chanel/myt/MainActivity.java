@@ -1,11 +1,14 @@
 package com.chanel.myt;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.chanel.myt.adapter.MyAdapter;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         myAdapter = new MyAdapter(list,this);
         recyclerView.setAdapter(myAdapter);
         myAdapter.addOnItemClickListener(this);
+        runLayoutAnimation(recyclerView);
     }
     private void initData(){
         ColorBean colorBean0 = new ColorBean(R.color.red,1);
@@ -61,6 +65,19 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         list.add(colorBean8);
     }
 
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+    }
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.recycler_animation);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
     @Override
     public void onItemClick(View view, int position) {
         if (position < myAdapter.getItemCount() - 2)

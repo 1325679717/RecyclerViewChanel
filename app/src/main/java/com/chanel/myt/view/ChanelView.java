@@ -97,10 +97,6 @@ public class ChanelView extends RecyclerView {
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
             float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);//[0,1]
-            if ((int)chanelItemView.getTag() == 1){
-                Log.i("ChanelView","getTop = "+chanelItemView.getTop()+",openheight = "+ChanelItemView.opendHeight);
-                Log.i("ChanelView","f = "+f);
-            }
             setItemViewPercent(chanelItemView,f);
             if(f >=1){//展开的
                 chanelItemView.setState(ChanelItemView.OPEN);
@@ -208,6 +204,21 @@ public class ChanelView extends RecyclerView {
 
         }
     }
-
+/*    @Override
+    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
+        if (getAdapter() != null && getLayoutManager() instanceof LinearLayoutManager) {
+            LayoutAnimationController.AnimationParameters animationParameters = params.layoutAnimationParameters;
+            if (animationParameters == null) {
+                AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+                alphaAnimation.setDuration(1000);
+                animationParameters = new LayoutAnimationController.AnimationParameters();
+                params.layoutAnimationParameters = animationParameters;
+            }
+            animationParameters.count = count;
+            animationParameters.index = index;
+        } else {
+            super.attachLayoutAnimationParameters(child, params, index, count);
+        }
+    }*/
 
 }
