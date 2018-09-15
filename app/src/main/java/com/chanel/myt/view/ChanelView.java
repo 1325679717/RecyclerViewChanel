@@ -182,7 +182,7 @@ public class ChanelView extends RecyclerView{
     }*/
 
     private int safeTargetPosition(int position, int count) {
-        if (position < 0) {
+        if (position <= 0) {
             return 0;
         }
         if (position >= count) {
@@ -199,13 +199,18 @@ public class ChanelView extends RecyclerView{
         if (n <= firstItem ){
             //当要置顶的项在当前显示的第一个项的前面时
             smoothScrollToPosition(n);
-        }else if ( n <= lastItem ){
+            Log.i("ChanelView","if n = "+n+",firstItem = "+firstItem);
+        }else if (n <= lastItem ){
             //当要置顶的项已经在屏幕上显示时
             int top = getChildAt(n - firstItem).getTop();
+            Log.i("ChanelView","else if scollToPosition n ="+n+",lastItem = "+lastItem+",top = "+top+",firstItem = "+firstItem);
             smoothScrollBy(0,top);
+
         }else{
             //当要置顶的项在当前显示的最后一项的后面时
+//            n = n > 0? n - 1 :n;
             smoothScrollToPosition(n);
+            Log.i("ChanelView","else");
             //这里这个变量是用在RecyclerView滚动监听里面的
 //            move = true;
         }
