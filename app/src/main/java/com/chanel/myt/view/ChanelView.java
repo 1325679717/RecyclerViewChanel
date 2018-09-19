@@ -182,7 +182,7 @@ public class ChanelView extends RecyclerView {
             int position = targetPosition - firstItem;
             int top = getChildAt(position).getTop();
             smoothScrollBy(0,top);
-            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type = "+type);
+            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type =  "+type);
         }else{
             smoothScrollToPosition(targetPosition);
             Log.i("ChanelView","scollToPosition  else targetPosition= "+targetPosition+",type = "+type);
