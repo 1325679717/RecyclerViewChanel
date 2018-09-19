@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
-//    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
     int NORMAL = 1;
     int FOOTER = 2;
     int disPlayWidth = 0;
@@ -56,7 +55,6 @@ public class MyAdapter extends RecyclerView.Adapter {
             imageView.setTag(viewHolder.getLayoutPosition());
             Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
             imageView.setImageBitmap(bitmap);
-//            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
             myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
             myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());

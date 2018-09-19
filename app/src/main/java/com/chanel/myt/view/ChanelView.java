@@ -22,7 +22,7 @@ import com.chanel.myt.listener.ItemClickListener;
 import com.chanel.myt.utils.ViewUtils;
 
 public class ChanelView extends RecyclerView {
-    private float velocityFactor = 0.25f;
+    private float velocityFactor = 0.2f;
     private float mTriggerOffset = 0.5f;
     private int mPositionOnTouchDown;
     private View currentView;//当前展开的view
@@ -145,7 +145,7 @@ public class ChanelView extends RecyclerView {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN){
             mPositionOnTouchDown = ViewUtils.getCenterOpenChildViewPosition(this);
-//            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
+            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -175,17 +175,17 @@ public class ChanelView extends RecyclerView {
         LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
         int firstItem = layoutManager.findFirstVisibleItemPosition();
         int lastItem = layoutManager.findLastVisibleItemPosition();
-        if (targetPosition <= firstItem ){//targetPosition <= firstItem
+        if (targetPosition <= firstItem){//targetPosition <= firstItem
             smoothScrollToPosition(targetPosition);
             Log.i("ChanelView","scollToPosition  if targetPosition= "+targetPosition+",type = "+type);
-        }else if (targetPosition <= lastItem ){
+        }else if (targetPosition <= lastItem){
             int position = targetPosition - firstItem;
             int top = getChildAt(position).getTop();
             smoothScrollBy(0,top);
             Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type = "+type);
         }else{
             smoothScrollToPosition(targetPosition);
-            Log.i("ChanelView","scollToPosition  else targetPosition= "+",type = "+type);
+            Log.i("ChanelView","scollToPosition  else targetPosition= "+targetPosition+",type = "+type);
 
         }
     }
