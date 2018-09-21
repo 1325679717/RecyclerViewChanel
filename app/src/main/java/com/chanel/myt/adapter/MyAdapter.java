@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chanel.myt.R;
 import com.chanel.myt.bean.ColorBean;
 import com.chanel.myt.utils.DisPlayUtils;
@@ -52,8 +53,11 @@ public class MyAdapter extends RecyclerView.Adapter {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
             ImageView imageView = myViewHolder.textView;
-            imageView.setTag(viewHolder.getLayoutPosition());
             Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
+//            Glide
+//                    .with(imageView.getContext())
+//                    .load("http://smart-test1-php-1255596649.file.myqcloud.com/images/cms/566a6452a40568c09931a141a08217b1.jpg")
+//                    .into(imageView);
             imageView.setImageBitmap(bitmap);
             myViewHolder.chanelItemText.setBigText("即将于精品店上市");
             myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());

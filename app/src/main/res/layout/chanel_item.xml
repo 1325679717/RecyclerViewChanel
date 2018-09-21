@@ -2,12 +2,16 @@
 <com.chanel.myt.view.ChanelItemView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/chanel_mask"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <ImageView
         android:id="@+id/iv"
         android:textColor="@android:color/white"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:src="@drawable/image_four"
         android:layout_height="match_parent" />
 <!--    <include layout="@layout/chanel_item_text"
         android:layout_width="wrap_content"
