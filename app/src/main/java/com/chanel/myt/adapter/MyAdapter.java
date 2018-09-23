@@ -1,6 +1,8 @@
 package com.chanel.myt.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,20 +14,30 @@ import android.widget.TextView;
 import com.chanel.myt.R;
 import com.chanel.myt.bean.ColorBean;
 import com.chanel.myt.utils.DisPlayUtils;
+import com.chanel.myt.view.ChanelItemText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
-    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
+//    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
     int NORMAL = 1;
     int FOOTER = 2;
     int disPlayWidth = 0;
+    float footerHeight = 0;
     List<ColorBean> list;
+    private OnItemClickListener onItemClickListener;
+    public interface OnItemClickListener{
+        void onItemClick(View v,int position);
+    }
 
+    public void addOnItemClickListener(OnItemClickListener listener){
+        onItemClickListener = listener;
+    }
     public MyAdapter(List<ColorBean> list, Context context) {
         this.list = list;
         disPlayWidth = DisPlayUtils.getScreenWidth(context);
+        footerHeight = (DisPlayUtils.getScreenHeight(context)) * 0.2f;
     }
     @NonNull
     @Override
@@ -37,24 +49,36 @@ public class MyAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
         if (viewHolder instanceof MyViewHolder) {
             MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-            TextView textView = myViewHolder.textView;
-            textView.setTag(viewHolder.getLayoutPosition());
-            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
-            textView.setText(viewHolder.getLayoutPosition()+"");
+            ImageView imageView = myViewHolder.textView;
+            imageView.setTag(viewHolder.getLayoutPosition());
+            Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
+            imageView.setImageBitmap(bitmap);
+//            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
+            myViewHolder.chanelItemText.setBigText("即将于精品店上市");
             myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
+//            myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());
+            myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
 
         }else {
             FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
             TextView textView = footerViewHolder.textView;
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
             layoutParams.width = disPlayWidth;
+            layoutParams.height = (int) footerHeight - 30;
             textView.setLayoutParams(layoutParams);
-            footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
-//            footerViewHolder.imageView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
+//            footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
+            footerViewHolder.textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
         }
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onItemClickListener.onItemClick(v,viewHolder.getLayoutPosition());
+            }
+        });
     }
 
     @Override
@@ -70,10 +94,12 @@ public class MyAdapter extends RecyclerView.Adapter {
         return list.size();
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
+        ImageView textView;
+        ChanelItemText chanelItemText;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.iv);
+            chanelItemText = itemView.findViewById(R.id.chanelItemText);
         }
     }
     class FooterViewHolder extends RecyclerView.ViewHolder{

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,41 +16,18 @@ import com.chanel.myt.utils.DisPlayUtils;
 public class ChanelItemView extends RelativeLayout {
     public static int opendHeight = 0;
 
-    public static int OPEN = 0;
-
-    public static int FOLDED = 1;
-
-    public static int CLOSE = 2;
 
     private int opendWidth = 0;
-    private int foldedHeight = 0;
+    public static int foldedHeight = 0;
 
-    private float parallax = 0;
 
-    private int parallaxOffset;
-    private TextView textView;
+    private ImageView imageView;
 
-    private int state = OPEN;
+    private ChanelItemText chanelItemText;
 
-    public int getState() {
-        return state;
-    }
 
-    public void setState(int state) {
-        this.state = state;
-    }
 
-    public void setParallaxOffset(int parallaxOffset) {
-        this.parallaxOffset = parallaxOffset;
-    }
 
-    public int getFoldedHeight() {
-        return foldedHeight;
-    }
-
-    /*public int getOpendHeight() {
-        return opendHeight;
-    }*/
 
     public ChanelItemView(Context context) {
         super(context);
@@ -80,39 +58,39 @@ public class ChanelItemView extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        textView = findViewById(R.id.iv);
+        imageView = findViewById(R.id.iv);
+        chanelItemText = findViewById(R.id.chanelItemText);
     }
-
+    public void setItemViewPercent(float percent){
+        chanelItemText.setItemViewPercent(percent);
+    }
     public void parallaxOpen(float f){
-        parallax = f;
-        textView.getLayoutParams().height = opendHeight;
-        textView.getLayoutParams().width = opendWidth;
+        imageView.getLayoutParams().height = opendHeight;
+        imageView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     public void parallaxOpening(float f){//0-1
-        parallax = f;
         int height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
         if (height >= foldedHeight && height <= opendHeight) {
-            textView.getLayoutParams().height = height;
-            textView.getLayoutParams().width = opendWidth;
+            imageView.getLayoutParams().height = height;
+            imageView.getLayoutParams().width = opendWidth;
             requestLayout();
         }
     }
     public void parallaxFolded(float f){
-        parallax = f;
-        textView.getLayoutParams().height = foldedHeight;
-        textView.getLayoutParams().width = opendWidth;
+        imageView.getLayoutParams().height = foldedHeight;
+        imageView.getLayoutParams().width = opendWidth;
         requestLayout();
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        textView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
+        imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
 //        int imgHeight =
 //        setMeasuredDimension();
     }
 
-    public TextView getImageView() {
-        return textView;
+    public ImageView getImageView() {
+        return imageView;
     }
 }
