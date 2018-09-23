@@ -5,9 +5,8 @@
     <ImageView
         android:id="@+id/iv"
         android:textColor="@android:color/white"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:src="@drawable/image_four"
         android:layout_height="match_parent" />
 <!--    <include layout="@layout/chanel_item_text"
         android:layout_width="wrap_content"
@@ -18,6 +17,12 @@
         android:id="@+id/chanelItemText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"/>
+    <LinearLayout
+        android:id="@+id/chanel_mask"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </com.chanel.myt.view.ChanelItemView>

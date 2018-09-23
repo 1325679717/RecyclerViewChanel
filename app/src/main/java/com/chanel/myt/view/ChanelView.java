@@ -22,7 +22,7 @@ import com.chanel.myt.listener.ItemClickListener;
 import com.chanel.myt.utils.ViewUtils;
 
 public class ChanelView extends RecyclerView {
-    private float velocityFactor = 0.25f;
+    private float velocityFactor = 0.2f;
     private float mTriggerOffset = 0.5f;
     private int mPositionOnTouchDown;
     private View currentView;//当前展开的view
@@ -91,14 +91,14 @@ public class ChanelView extends RecyclerView {
             View childView = getChildAt(i);
             if (!(childView instanceof ChanelItemView)) break;
             ChanelItemView chanelItemView = (ChanelItemView) getChildAt(i);
-            float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);//[0,1]
-            chanelItemView.setItemViewPercent(f);
-            if(f >=1){//展开的
-                chanelItemView.parallaxOpen(1.0f);
-            }else if (f > 0 && f < 1){//正在展开的
-                chanelItemView.parallaxOpening(f);
+//            chanelItemView.setItemViewPercent(f);
+            if(childView.getTop()< 0 && childView.getBottom() <= ChanelItemView.opendHeight){//展开的
+                chanelItemView.updateView(1.0f);
+            }else if (childView.getTop() < ChanelItemView.opendHeight){//正在展开的
+                float f = (1 - ((float)chanelItemView.getTop())/ChanelItemView.opendHeight);//[0,1]
+                chanelItemView.updateView(f);
             }else {//折叠的
-                chanelItemView.parallaxFolded(0.2f);
+                chanelItemView.updateView(0f);
             }
         }
     }
@@ -112,7 +112,8 @@ public class ChanelView extends RecyclerView {
                 mFirstTopWhenDragging = currentView.getTop();
             }
         }else if (state == SCROLL_STATE_SETTLING){
-
+//            mNeedAdjust = false;
+            currentView = null;
         }else if (state == SCROLL_STATE_IDLE) {
             if (mNeedAdjust) {
                 int targetPosition = ViewUtils.getCenterOpenChildViewPosition(this);
@@ -145,7 +146,7 @@ public class ChanelView extends RecyclerView {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN){
             mPositionOnTouchDown = ViewUtils.getCenterOpenChildViewPosition(this);
-//            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
+            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -175,14 +176,14 @@ public class ChanelView extends RecyclerView {
         LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
         int firstItem = layoutManager.findFirstVisibleItemPosition();
         int lastItem = layoutManager.findLastVisibleItemPosition();
-        if (targetPosition <= firstItem ){//targetPosition <= firstItem
+        if (targetPosition <= firstItem){//targetPosition <= firstItem
             smoothScrollToPosition(targetPosition);
             Log.i("ChanelView","scollToPosition  if targetPosition= "+targetPosition+",type = "+type);
-        }else if (targetPosition <= lastItem ){
+        }else if (targetPosition <= lastItem){
             int position = targetPosition - firstItem;
             int top = getChildAt(position).getTop();
             smoothScrollBy(0,top);
-            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type = "+type);
+            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type =  "+type);
         }else{
             smoothScrollToPosition(targetPosition);
             Log.i("ChanelView","scollToPosition  else targetPosition= "+",type = "+type);

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
-//    int ids[] = {R.color.red,R.color.color_2aa094,R.color.color_F5A623,R.color.colorAccent,R.color.colorPrimaryDark,R.color.color_378983,R.color.colorPrimary};
     int NORMAL = 1;
     int FOOTER = 2;
     int disPlayWidth = 0;
     float footerHeight = 0;
+    int factor = 1000;
     List<ColorBean> list;
     private OnItemClickListener onItemClickListener;
     public interface OnItemClickListener{
@@ -42,36 +43,25 @@ public class MyAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        if (i == NORMAL)
-            return new MyViewHolder(View.inflate(viewGroup.getContext(),R.layout.chanel_item,null));
-        else
-            return new FooterViewHolder(View.inflate(viewGroup.getContext(),R.layout.chanel_footer,null));
+        return new MyViewHolder(View.inflate(viewGroup.getContext(),R.layout.chanel_item,null));
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
-        if (viewHolder instanceof MyViewHolder) {
-            MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-            ImageView imageView = myViewHolder.textView;
-            imageView.setTag(viewHolder.getLayoutPosition());
-            Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(i).getRes());
-            imageView.setImageBitmap(bitmap);
-//            textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
-            myViewHolder.chanelItemText.setBigText("即将于精品店上市");
-            myViewHolder.itemView.setTag(viewHolder.getLayoutPosition());
+        int position = viewHolder.getLayoutPosition() % list.size();
+        MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
+        ImageView imageView = myViewHolder.textView;
+        Log.i("MyAdapter","onBindViewHolder position = "+position);
+        Bitmap bitmap = BitmapFactory.decodeResource(viewHolder.itemView.getContext().getResources(), list.get(position).getRes());
+//            Glide
+//                    .with(imageView.getContext())
+//                    .load("http://smart-test1-php-1255596649.file.myqcloud.com/images/cms/566a6452a40568c09931a141a08217b1.jpg")
+//                    .into(imageView);
+        imageView.setImageBitmap(bitmap);
+        myViewHolder.chanelItemText.setBigText("即将于精品店上市");
+        myViewHolder.itemView.setTag(position);
 //            myViewHolder.chanelItemText.getBigTv().setTag(viewHolder.getLayoutPosition());
-            myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
-
-        }else {
-            FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
-            TextView textView = footerViewHolder.textView;
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) textView.getLayoutParams();
-            layoutParams.width = disPlayWidth;
-            layoutParams.height = (int) footerHeight - 30;
-            textView.setLayoutParams(layoutParams);
-//            footerViewHolder.textView.setTag(viewHolder.getLayoutPosition());
-            footerViewHolder.textView.setBackgroundColor(viewHolder.itemView.getContext().getColor(list.get(i).getRes()));
-        }
+        myViewHolder.chanelItemText.setSmallText("2018/19秋冬系列");
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,17 +71,10 @@ public class MyAdapter extends RecyclerView.Adapter {
         });
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (list.get(position).getType() == 1)
-            return NORMAL;
-        else
-            return FOOTER;
-    }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list.size() * factor;
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         ImageView textView;
@@ -100,13 +83,6 @@ public class MyAdapter extends RecyclerView.Adapter {
             super(itemView);
             textView = itemView.findViewById(R.id.iv);
             chanelItemText = itemView.findViewById(R.id.chanelItemText);
-        }
-    }
-    class FooterViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
-        public FooterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.iv);
         }
     }
 }

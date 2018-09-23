@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         recyclerView.setLayoutManager(layout);
         myAdapter = new MyAdapter(list,this);
         recyclerView.setAdapter(myAdapter);
+
         myAdapter.addOnItemClickListener(this);
         runLayoutAnimation(recyclerView);
     }
@@ -61,9 +62,11 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         list.add(new ColorBean(R.drawable.image_one,1));
 //        list.add(colorBean5);
 //        list.add(colorBean6);
-        list.add(colorBean7);
-        list.add(colorBean8);
+//        list.add(colorBean7);
+//        list.add(colorBean8);
     }
+//http://smart-prod-phpservice-1255596649.file.myqcloud.com/images/cms/61ba4499faab67410098e4ea995608c7.png
+//    http:\/\/smart-test1-php-1255596649.file.myqcloud.com\/images\/cms\/566a6452a40568c09931a141a08217b1.jpg
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();

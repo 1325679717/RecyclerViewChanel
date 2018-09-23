@@ -25,9 +25,9 @@ public class ChanelItemView extends RelativeLayout {
 
     private ChanelItemText chanelItemText;
 
+    private LinearLayout chanel_mask;
 
-
-
+    private float f;
 
     public ChanelItemView(Context context) {
         super(context);
@@ -60,37 +60,47 @@ public class ChanelItemView extends RelativeLayout {
         super.onFinishInflate();
         imageView = findViewById(R.id.iv);
         chanelItemText = findViewById(R.id.chanelItemText);
+        chanel_mask = findViewById(R.id.chanel_mask);
+
     }
+
+
     public void setItemViewPercent(float percent){
         chanelItemText.setItemViewPercent(percent);
     }
-    public void parallaxOpen(float f){
-        imageView.getLayoutParams().height = opendHeight;
-        imageView.getLayoutParams().width = opendWidth;
-        requestLayout();
+    public void parallaxImg(float f){//0-1
+        int offset = (int) (foldedHeight* f);
+        int moveY = foldedHeight - offset;
+        imageView.setY(-moveY);//imgetView y坐标设置移动0-foldedHeight高度产生视差效果
+
     }
-    public void parallaxOpening(float f){//0-1
-        int height = foldedHeight + (int) ((opendHeight -foldedHeight)* f);
+    public void updateView(float f){
+
+        this.f = f;
+        int height = foldedHeight + getDifference();
         if (height >= foldedHeight && height <= opendHeight) {
-            imageView.getLayoutParams().height = height;
+            chanel_mask.getLayoutParams().height = height;
+            imageView.getLayoutParams().height = opendHeight;
             imageView.getLayoutParams().width = opendWidth;
-            requestLayout();
         }
-    }
-    public void parallaxFolded(float f){
-        imageView.getLayoutParams().height = foldedHeight;
-        imageView.getLayoutParams().width = opendWidth;
+        setItemViewPercent(f);
+        parallaxImg(f);
         requestLayout();
+    }
+
+    /**
+     * 滑动时ChanelItemView增加的高度0%-100% foldedHeight到opendHeight的高度差
+     * @return
+     */
+    private int getDifference(){
+        return (int) ((opendHeight -foldedHeight)* f);
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int height = foldedHeight + getDifference();
+        setMeasuredDimension(opendWidth,height);
+        chanel_mask.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(height,MeasureSpec.EXACTLY));
         imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
-//        int imgHeight =
-//        setMeasuredDimension();
-    }
-
-    public ImageView getImageView() {
-        return imageView;
     }
 }
