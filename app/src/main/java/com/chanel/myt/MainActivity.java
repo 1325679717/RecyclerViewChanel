@@ -16,11 +16,6 @@ import com.chanel.myt.library.view.ChanelView;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-* 1.上拉会滑动多个，并且可能停在item任何位置(可能smoothScrollToPosition->(targetPosition > currentPosition))
-* 2.拖动停留
-* 3.
-* */
 public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemClickListener {
     private ChanelView recyclerView;
     private MyAdapter myAdapter;
@@ -41,24 +36,11 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         runLayoutAnimation(recyclerView);
     }
     private void initData(){
-        ColorBean colorBean0 = new ColorBean(R.color.red,1);
-        ColorBean colorBean1 = new ColorBean(R.color.color_2aa094,1);
-        ColorBean colorBean2 = new ColorBean(R.color.color_F5A623,1);
-        ColorBean colorBean3 = new ColorBean(R.color.colorAccent,1);
-        ColorBean colorBean4 = new ColorBean(R.color.colorPrimaryDark,1);
-        ColorBean colorBean5 = new ColorBean(R.color.color_378983,1);
-        ColorBean colorBean6 = new ColorBean(R.color.colorPrimary,1);
-        ColorBean colorBean7 = new ColorBean(R.color.red,2);
-        ColorBean colorBean8 = new ColorBean(R.color.color_2aa094,2);
         list.add(new ColorBean(R.drawable.img_one,1));
         list.add(new ColorBean(R.drawable.img_two,1));
         list.add(new ColorBean(R.drawable.img_three,1));
         list.add(new ColorBean(R.drawable.img_four,1));
         list.add(new ColorBean(R.drawable.img_five,1));
-//        list.add(colorBean5);
-//        list.add(colorBean6);
-//        list.add(colorBean7);
-//        list.add(colorBean8);
     }
 //http://smart-prod-phpservice-1255596649.file.myqcloud.com/images/cms/61ba4499faab67410098e4ea995608c7.png
 //    http:\/\/smart-test1-php-1255596649.file.myqcloud.com\/images\/cms\/566a6452a40568c09931a141a08217b1.jpg
@@ -74,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
     }
     @Override
     public void onItemClick(View view, int position) {
-        if (position < myAdapter.getItemCount() - 2)
-            recyclerView.onlickScrollToPosition(position);
+        recyclerView.onlickScrollToPosition(position);
     }
 }
