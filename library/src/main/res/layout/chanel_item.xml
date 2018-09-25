@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chanel.myt.library.view.ChanelItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/iv"
+        android:textColor="@android:color/white"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+<!--    <include layout="@layout/chanel_item_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>-->
+    <com.chanel.myt.library.view.MyItemTextLayout
+        android:id="@+id/chanelItemText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
+    <LinearLayout
+        android:id="@+id/chanel_mask"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</com.chanel.myt.library.view.ChanelItemView>

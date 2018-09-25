@@ -9,15 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chanel.myt.R;
-import com.chanel.myt.bean.ColorBean;
-import com.chanel.myt.utils.DisPlayUtils;
-import com.chanel.myt.view.ChanelItemText;
+import com.chanel.myt.library.bean.ColorBean;
+import com.chanel.myt.library.utils.DisPlayUtils;
+import com.chanel.myt.library.view.MyItemTextLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter {
@@ -78,7 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter {
     }
     class MyViewHolder extends RecyclerView.ViewHolder{
         ImageView textView;
-        ChanelItemText chanelItemText;
+        MyItemTextLayout chanelItemText;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.iv);

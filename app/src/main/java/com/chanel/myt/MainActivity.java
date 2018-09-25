@@ -1,7 +1,6 @@
 package com.chanel.myt;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,16 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Toast;
 
 import com.chanel.myt.adapter.MyAdapter;
-import com.chanel.myt.bean.ColorBean;
-import com.chanel.myt.listener.ItemClickListener;
-import com.chanel.myt.utils.LinearLayoutManagerWithSmoothScroller;
-import com.chanel.myt.view.ChanelView;
+import com.chanel.myt.library.bean.ColorBean;
+import com.chanel.myt.library.view.ChanelView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -55,11 +50,11 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         ColorBean colorBean6 = new ColorBean(R.color.colorPrimary,1);
         ColorBean colorBean7 = new ColorBean(R.color.red,2);
         ColorBean colorBean8 = new ColorBean(R.color.color_2aa094,2);
-        list.add(new ColorBean(R.drawable.iv_splash_bg,1));
-        list.add(new ColorBean(R.drawable.system_bg,1));
-        list.add(new ColorBean(R.drawable.image_one,1));
-        list.add(new ColorBean(R.drawable.image_four,1));
-        list.add(new ColorBean(R.drawable.image_one,1));
+        list.add(new ColorBean(R.drawable.img_one,1));
+        list.add(new ColorBean(R.drawable.img_two,1));
+        list.add(new ColorBean(R.drawable.img_three,1));
+        list.add(new ColorBean(R.drawable.img_four,1));
+        list.add(new ColorBean(R.drawable.img_five,1));
 //        list.add(colorBean5);
 //        list.add(colorBean6);
 //        list.add(colorBean7);
