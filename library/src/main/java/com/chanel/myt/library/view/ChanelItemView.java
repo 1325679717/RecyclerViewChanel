@@ -27,6 +27,10 @@ public class ChanelItemView extends RelativeLayout {
 
     private float f;
 
+    public float getF() {
+        return f;
+    }
+
     public ChanelItemView(Context context) {
         super(context);
         init(context);
@@ -98,7 +102,9 @@ public class ChanelItemView extends RelativeLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int height = foldedHeight + getDifference();
         setMeasuredDimension(opendWidth,height);
-        chanel_mask.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(height,MeasureSpec.EXACTLY));
         imageView.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(opendHeight,MeasureSpec.EXACTLY));
+        chanel_mask.measure(MeasureSpec.makeMeasureSpec(opendWidth,MeasureSpec.EXACTLY),MeasureSpec.makeMeasureSpec(height,MeasureSpec.EXACTLY));
+//        int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height,MeasureSpec.AT_MOST);
+//        super.onMeasure(widthMeasureSpec, newHeightMeasureSpec);
     }
 }

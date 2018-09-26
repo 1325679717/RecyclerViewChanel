@@ -46,9 +46,6 @@ public abstract class ChanelItemTextLayout extends LinearLayout {
         float openY = (ChanelItemView.opendHeight - getHeight());
 
         float translationY = (openY - foldeY) * percent;
-
-
-
         this.setTranslationY(translationY);
     }
     public abstract void setTextAlpha(float percent);

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.chanel.myt.library.listener.ItemClickListener;
 import com.chanel.myt.library.utils.ViewUtils;
 
 public class ChanelView extends RecyclerView {
@@ -22,6 +23,7 @@ public class ChanelView extends RecyclerView {
     int mMaxTopWhenDragging = Integer.MIN_VALUE;
     int mMinTopWhenDragging = Integer.MAX_VALUE;
     private boolean mNeedAdjust = false;
+    private String TAG = "ChanelView";
     public ChanelView(@NonNull Context context) {
         super(context);
         onCreate();
@@ -44,7 +46,7 @@ public class ChanelView extends RecyclerView {
         return fling;
     }
     private void adjustPostionY(int velocityY){
-        Log.i("ChanelView","adjustPostionY velocityY= "+velocityY);
+        Log.i(TAG,"adjustPostionY velocityY= "+velocityY);
         int childCount = getChildCount();
         if (childCount > 0) {
             int curPosition = ViewUtils.getCenterOpenChildViewPosition(this);
@@ -136,7 +138,7 @@ public class ChanelView extends RecyclerView {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN){
             mPositionOnTouchDown = ViewUtils.getCenterOpenChildViewPosition(this);
-            Log.i("ChanelView","dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
+            Log.i(TAG,"dispatchTouchEvent mPositionOnTouchDown = "+mPositionOnTouchDown);
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -152,13 +154,13 @@ public class ChanelView extends RecyclerView {
         }
         return position;
     }
-    public void onlickScrollToPosition(int targetPosition){
+    public void onClickScrollToPosition(int targetPosition){
         LinearLayoutManager layoutManager = (LinearLayoutManager) getLayoutManager();
         int firstItem = layoutManager.findFirstVisibleItemPosition();
         int lastItem = layoutManager.findLastVisibleItemPosition();
         if (targetPosition >0 && targetPosition <=lastItem){
-            int position = targetPosition - firstItem;
-            int top = ChanelItemView.opendHeight * position;
+            int interval = targetPosition - firstItem;
+            int top = ChanelItemView.opendHeight * interval;
             smoothScrollBy(0,top);
         }
     }
@@ -168,15 +170,15 @@ public class ChanelView extends RecyclerView {
         int lastItem = layoutManager.findLastVisibleItemPosition();
         if (targetPosition <= firstItem){//targetPosition <= firstItem
             smoothScrollToPosition(targetPosition);
-            Log.i("ChanelView","scollToPosition  if targetPosition= "+targetPosition+",type = "+type);
+            Log.i(TAG,"scollToPosition  if targetPosition= "+targetPosition+",type = "+type);
         }else if (targetPosition <= lastItem){
             int position = targetPosition - firstItem;
             int top = getChildAt(position).getTop();
             smoothScrollBy(0,top);
-            Log.i("ChanelView","scollToPosition  else if targetPosition= "+targetPosition+",type =  "+type);
+            Log.i(TAG,"scollToPosition  else if targetPosition= "+targetPosition+",type =  "+type);
         }else{
             smoothScrollToPosition(targetPosition);
-            Log.i("ChanelView","scollToPosition  else targetPosition= "+",type = "+type);
+            Log.i(TAG,"scollToPosition  else targetPosition= "+",type = "+type);
         }
     }
 

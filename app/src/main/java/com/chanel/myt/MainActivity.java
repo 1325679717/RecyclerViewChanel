@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.chanel.myt.adapter.MyAdapter;
 import com.chanel.myt.library.bean.ColorBean;
+import com.chanel.myt.library.listener.ItemClickListener;
 import com.chanel.myt.library.view.ChanelView;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         LinearLayoutManager layout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
                 false);
         recyclerView.setLayoutManager(layout);
-        myAdapter = new MyAdapter(list,this);
+        myAdapter = new MyAdapter(recyclerView,list,this);
         recyclerView.setAdapter(myAdapter);
 
         myAdapter.addOnItemClickListener(this);
@@ -42,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
         list.add(new ColorBean(R.drawable.img_four,1));
         list.add(new ColorBean(R.drawable.img_five,1));
     }
-//http://smart-prod-phpservice-1255596649.file.myqcloud.com/images/cms/61ba4499faab67410098e4ea995608c7.png
-//    http:\/\/smart-test1-php-1255596649.file.myqcloud.com\/images\/cms\/566a6452a40568c09931a141a08217b1.jpg
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
         final Context context = recyclerView.getContext();
@@ -56,6 +56,6 @@ public class MainActivity extends AppCompatActivity implements MyAdapter.OnItemC
     }
     @Override
     public void onItemClick(View view, int position) {
-        recyclerView.onlickScrollToPosition(position);
+        Toast.makeText(this,position+"",Toast.LENGTH_LONG).show();
     }
 }

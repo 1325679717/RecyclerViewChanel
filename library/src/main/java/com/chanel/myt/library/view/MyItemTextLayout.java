@@ -33,16 +33,21 @@ public class MyItemTextLayout extends ChanelItemTextLayout {
         bigTv = findViewById(com.chanel.myt.library.R.id.content);
 
     }
+
+    public TextView getBigTv() {
+        return bigTv;
+    }
+
     public TextView getSmallTv() {
-        return null;
+        return bigTv;
     }
 
     public void setSmallText(String text) {
-
+        smallTv.setText(text);
     }
 
     public void setBigText(String text) {
-
+        bigTv.setText(text);
     }
     @Override
     public void setTextAlpha(float percent){

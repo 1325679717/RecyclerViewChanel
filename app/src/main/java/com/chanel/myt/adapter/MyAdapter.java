@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.chanel.myt.R;
 import com.chanel.myt.library.bean.ColorBean;
 import com.chanel.myt.library.utils.DisPlayUtils;
+import com.chanel.myt.library.view.ChanelItemView;
+import com.chanel.myt.library.view.ChanelView;
 import com.chanel.myt.library.view.MyItemTextLayout;
 
 import java.util.List;
@@ -26,6 +28,8 @@ public class MyAdapter extends RecyclerView.Adapter {
     int factor = 1000;
     List<ColorBean> list;
     private OnItemClickListener onItemClickListener;
+
+    private ChanelView recyclerView;
     public interface OnItemClickListener{
         void onItemClick(View v,int position);
     }
@@ -33,7 +37,8 @@ public class MyAdapter extends RecyclerView.Adapter {
     public void addOnItemClickListener(OnItemClickListener listener){
         onItemClickListener = listener;
     }
-    public MyAdapter(List<ColorBean> list, Context context) {
+    public MyAdapter(ChanelView recyclerView,List<ColorBean> list, Context context) {
+        this.recyclerView = recyclerView;
         this.list = list;
         disPlayWidth = DisPlayUtils.getScreenWidth(context);
         footerHeight = (DisPlayUtils.getScreenHeight(context)) * 0.2f;
@@ -63,8 +68,14 @@ public class MyAdapter extends RecyclerView.Adapter {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                onItemClickListener.onItemClick(v,viewHolder.getLayoutPosition());
+                if (v instanceof ChanelItemView) {
+                    ChanelItemView chanelItemView = (ChanelItemView) v;
+                    if (chanelItemView.getF() >= 1.0f) {
+                        onItemClickListener.onItemClick(v, viewHolder.getLayoutPosition());
+                    }else {
+                        recyclerView.onClickScrollToPosition(viewHolder.getLayoutPosition());
+                    }
+                }
             }
         });
     }
