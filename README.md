@@ -1,5 +1,5 @@
 
-![img](https://github.com/1325679717/RecyclerViewChanel/tree/dev/gif/chanel.gif)
+![image](https://github.com/1325679717/RecyclerViewChanel/tree/dev/gif/chanel.gif)
 
 
 ```javascript
